@@ -1,0 +1,2408 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdio.h>
+#include <ctype.h>
+FILE *fpin;
+FILE *list;
+FILE *regi_list;
+FILE *swap;
+FILE *self;
+FILE *food;
+FILE *plan;
+FILE *reserve_food;
+FILE *financial;
+FILE * take_food_file;
+FILE *cancel;
+FILE *result;
+struct new{
+    int num;
+    char title[50];
+    char akhbar[200];
+    char end[30];
+};
+struct users{
+    char id[50];
+    char name_karbar[50];
+    int money;
+    char pass[20];
+    char gender[20];
+};
+struct selfplan{
+    int number_of_food;
+    char self_id[40];
+    char date[40];
+    char type[20];
+    char food_id[40];
+    int count;
+    int lunch_start;
+    int lunch_end;
+    int dinner_start;
+    int dinner_end;
+    int food_price;
+};
+int num=1;
+struct selfplan s_plan[40];
+int number=1;
+struct users use[100];
+struct new news[30];
+struct datetime{
+    int  year,month,day,hour,minute;
+    char current_date[40];
+    char current_time[10];
+};
+struct datetime timeee;
+int shomare=1;
+char t[100][100];
+char u[100][100];
+char user[40],password[40],type[10],user_name[50];
+char info_std[100];
+char regi_information[100];
+int char_to_int(int len,char word[]){
+    int res=0,f=1;
+    for(int j=len-1;j>=0;j--){
+        res+=((((int)word[j])-48)*f);
+        f=f*10;
+    }
+    return res;
+}
+int compare(char *str){
+    char year[20],month[20],day[20];
+    strncpy(year,str,4);
+    year[4]='\0';
+    str=str+5;
+    strncpy(month,str,2);
+    month[2]='\0';
+    str=str+3;
+    strncpy(day,str,2);
+    day[2]='\0';
+    if(char_to_int((int)strlen(year),year)<timeee.year){
+        return 0;
+    }
+    else if(char_to_int((int)strlen(year),year)==timeee.year&&char_to_int((int)strlen(month),month)<timeee.month){
+        return 0;
+    }
+    else if(char_to_int((int)strlen(day),day)<timeee.day&&char_to_int((int)strlen(month),month)==timeee.month){
+        return 0;
+    }
+    else{
+        return 1;
+    }
+
+}
+void token(char *buf){
+    int m=0;
+    for(int i=0;i<(int)strlen(buf);i++) {
+        if (buf[i] == '|' || buf[i] == ':') {
+            strncpy(t[m], buf, i);
+            t[m][i] = '\0';
+            buf = buf + i+1;
+            i = 0;
+            m++;
+        }
+    }
+    for(int i=(int)strlen(buf);i>=0;i--){
+        if(isalpha(buf[i])==0&&isdigit(buf[i])==0){
+            buf[i]='\0';
+        }
+        else
+            break;
+    }
+    strcpy(t[m],buf);
+    t[m+1][0]='\0';
+}
+void change(){
+    swap=fopen("C:\\Users\\sepidpardaz\\Desktop\\swap2.txt","r");
+    list=fopen("C:\\Users\\sepidpardaz\\Desktop\\std-list.txt","w");
+    char sw[300];
+    while(fgets(sw,300,swap)!=NULL){
+        fprintf(list,"%s\n",sw);
+    }
+    fclose(swap);
+    fclose(list);
+}
+void change_pass(char buf[],char shenase[]){
+    token(buf);
+    if(strcmp(user,t[1])!=0){
+        printf("%s#not-found\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#not-found\n",shenase);
+        fclose(result);
+
+        return;
+    }
+    if(strcmp(password,t[3])!=0){
+        printf("%s#permission-denied\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        return;
+    }
+    if(strcmp(t[0],"user")!=0||strcmp(t[2],"old-pass")!=0||strcmp(t[4],"new-pass")!=0){
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+    else{
+        printf("%s#success\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#success\n",shenase);
+        fclose(result);
+        for(int g=1;g<number;g++){
+            if(strcmp(t[1],use[number].id)==0){
+                strcpy(use[number].pass,t[5]);
+            }
+        }
+       for(int i=0;i<(strlen(info_std));i++){
+            if(info_std[i]=='p'&&info_std[i+1]=='a'&&info_std[i+2]=='s'&&info_std[i+3]=='s'&&info_std[i+5]=='o'&&info_std[i+7]=='d'){
+               i=i+9;
+              int k=i;
+               for(int j=0;j<(int)strlen(t[5]);j++,i++){
+                  if(info_std[i]=='|'){
+                      for(int s=(int)strlen(info_std)-1+strlen(t[5]);s>=i+1;s--){
+                          info_std[s]=info_std[s-1];
+                      }
+                  }
+                   info_std[i]=t[5][j];
+               }
+                if(info_std[i]=='|'){
+                   continue;
+                }
+                while(i<strlen(info_std)){
+                    if(info_std[i]=='|'){
+                        break;
+                    }
+                    int j;
+                    for( j=i;j<strlen(info_std)-1;j++) {
+                        info_std[j] = info_std[j + 1];
+
+
+                    }
+                    info_std[j]='\0';
+                }
+           }
+
+       }
+        swap=fopen("C:\\Users\\sepidpardaz\\Desktop\\swap2.txt","w+");
+        list=fopen("C:\\Users\\sepidpardaz\\Desktop\\std-list.txt","r");
+        char inf[300];
+        while(fgets(inf,300,list)!=NULL) {
+            token(inf);
+            if(strcmp(user,t[5])==0&&strcmp(password,t[7])==0){
+                fprintf(swap,"%s\n",info_std);
+            }
+            else {
+                fprintf(swap, "%s\n", inf);
+
+            }
+        }
+        fclose(list);
+        fclose(swap);
+        change();
+        strcpy(password,use[number].pass);
+
+        return;
+    }
+
+}
+void logout(char buf[],char shenase[]){
+    token(buf);
+    if(strcmp(t[0],"user")!=0) {
+        printf("%s#invalid\n", shenase);
+        result = fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt", "a");
+        fprintf(result, "%s#invalid\n", shenase);
+        fclose(result);
+        return;
+    }
+    if(strcmp(t[1],user)!=0){
+        printf("%s#not-found\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#not-found\n",shenase);
+        fclose(result);
+        return;
+    }
+    else{
+        printf("%s#success\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#success\n",shenase);
+        fclose(result);
+        user[0]='\0';
+        password[0]='\0';
+        type[0]='\0';
+        return;
+    }
+}
+void login(char buf[],char shenase[]) {
+    char info[300];
+    token(buf);
+    strcpy(user, t[1]);
+    strcpy(password, t[3]);
+    if (strcmp(t[0], "user") != 0 || strcmp(t[2], "password") != 0) {
+        printf("%s#invalid\n", shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        password[0] = '\0';
+        user[0] = '\0';
+        return;
+    }
+    list = fopen("C:\\Users\\sepidpardaz\\Desktop\\std-list.txt", "r");
+
+    while (fgets(info, 300, list) != NULL) {
+        token(info);
+        if(info[0]=='*'){
+            continue;
+        }
+        if (strcmp(user, t[5]) == 0 && strcmp(password, t[7]) == 0) {
+            strcpy(info_std, info);
+            strcpy(user, t[5]);
+            strcpy(type, t[15]);
+            printf("%s#success\n", shenase);
+            result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+            fprintf(result,"%s#success\n",shenase);
+            fclose(result);
+            return;
+        }
+    }
+
+    printf("%s#not-found\n", shenase);
+    result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+    fprintf(result,"%s#not-found\n",shenase);
+    fclose(result);
+    password[0] = '\0';
+    user[0] = '\0';
+    return;
+    fclose(list);
+
+}
+void regi(char *buf,char shenase[]){
+    token(buf);
+    char check[300];
+    if(strcmp(t[0],"name")!=0||strcmp(t[2],"family")!=0||strcmp(t[4],"user-id")!=0||strcmp(t[6],"password")!=0
+       ||strcmp(t[8],"national-id-code")!=0||strcmp(t[10],"birthdate")!=0||strcmp(t[12],"gender")!=0||strcmp(t[14],"type")!=0||(strcmp(t[13],"male")!=0&&strcmp(t[13],"female")!=0)||(strcmp(t[15],"admin")!=0&&strcmp(t[15],"student")!=0)||isdigit(t[9][0])==0) {
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+    if(t[11][4]!='-'||t[11][7]!='-'){
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+    list=fopen("C:\\Users\\sepidpardaz\\Desktop\\std-list.txt","r");
+   while(fgets(check,300,list)!=NULL){
+       for(int i=(int)strlen(buf)-1;i>=0;i--){
+           if(isalpha(buf[i])==0&&isdigit(buf[i])==0){
+               buf[i]='\0';
+           }
+           else
+               break;
+       }
+       for(int i=(int)strlen(check)-1;i>=0;i--){
+           if(isalpha(check[i])==0&&isdigit(check[i])==0){
+               check[i]='\0';
+           }
+           else
+               break;
+       }
+        if(strcmp(buf,check)==0) {
+            printf("%s#permission-denied\n", shenase);
+            fclose(list);
+            result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+            fprintf(result,"%s#permission-denied\n",shenase);
+            fclose(result);
+            return;
+        }
+    }
+    if(strcmp(t[0],"name")==0&&strcmp(t[2],"family")==0&&strcmp(t[4],"user-id")==0&&strcmp(t[6],"password")==0
+    &&strcmp(t[8],"national-id-code")==0&&strcmp(t[10],"birthdate")==0&&strcmp(t[12],"gender")==0&&strcmp(t[14],"type")==0) {
+        printf("%s#success\n", shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#success\n",shenase);
+        fclose(result);
+        strcpy(regi_information,buf);
+        regi_list=fopen("C:\\Users\\sepidpardaz\\Desktop\\regi-list.txt","a+");
+        fprintf(regi_list,"%s\n",buf);
+        fclose(regi_list);
+        return;
+    }
+    else
+    {
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+}
+int check(int i,char tt[][100]){
+    regi_list=fopen("C:\\Users\\sepidpardaz\\Desktop\\regi-list.txt","r");
+    char infoo[300];
+    while(fgets(infoo,300,regi_list)!=NULL){
+        token(infoo);
+        if(strcmp(t[5],tt[i])==0){
+            fclose(regi_list);
+            strcpy(regi_information,infoo);
+            return 1;
+        }
+    }
+    fclose(regi_list);
+    return 0;
+}
+void approve(char buf[],char shenase[]){
+    token(buf);
+    char tt[30][100];
+    for(int i=0;t[i][0]!='\0';i++) {
+        strcpy(tt[i], t[i]);
+    }
+    int i=1;
+    while(tt[i][0]!='\0'&&tt[i-1][0]!='\0'){
+            if(check(i,tt)==0){
+                printf("%s#not-found\n",shenase);
+                result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+                fprintf(result,"%s#not-found\n",shenase);
+                fclose(result);
+            }
+            if(strcmp(type,"admin")!=0){
+            printf("%s#permission-denied\n",shenase);
+                result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+                fprintf(result,"%s#permission-denied\n",shenase);
+                fclose(result);
+            return;
+        }
+        if(strcmp(tt[i-1],"user")!=0){
+            printf("%s#invalid\n",shenase);
+            result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+            fprintf(result,"%s#invalid\n",shenase);
+            fclose(result);
+            return;
+        }
+        if(check(i,tt)==1){
+            list=fopen("C:\\Users\\sepidpardaz\\Desktop\\std-list.txt","a");
+            fprintf(list,"%s\n",regi_information);
+            fclose(list);
+            printf("%s#success\n",shenase);
+            result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+            fprintf(result,"%s#success\n",shenase);
+            fclose(result);
+            strcpy(use[number].id,t[5]);
+            strcpy(use[number].name_karbar,t[1]);
+            use[number].money=0;
+            strcpy(use[number].pass,t[7]);
+            strcpy(use[number].gender,t[13]);
+            number++;
+        }
+        i=i+2;
+    }
+}
+void remove_std(char buf[],char shenase[]){
+    token(buf);
+    list=fopen("C:\\Users\\sepidpardaz\\Desktop\\std-list.txt","r");
+    char in[300];
+    char tt[30][100];
+    int flag=0;
+    for(int i=0;t[i][0]!='\0';i++) {
+        strcpy(tt[i], t[i]);
+    }
+    if(strcmp("user",tt[0])!=0) {
+        printf("%s#invalid\n", shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+    while(fgets(in,300,list)!=NULL){
+        token(in);
+       t[15][strlen(t[15])]='\0';
+        if(strcmp(tt[1],t[5])==0&&strcmp(t[15],"student")==0){
+            flag=1;
+            fclose(list);
+            break;
+        }
+    }
+    if(flag==0){
+        printf("%s#not-found\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#not-found\n",shenase);
+        fclose(result);
+        fclose(list);
+        return;
+    }
+    if(strcmp("admin",type)!=0){
+        printf("%s#premission-denied\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        fclose(list);
+        return;
+    }
+    else
+    {
+        printf("%s#success\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#success\n",shenase);
+        fclose(result);
+        fclose(list);
+        list=fopen("C:\\Users\\sepidpardaz\\Desktop\\std-list.txt","r");
+        swap=fopen("C:\\Users\\sepidpardaz\\Desktop\\swap2.txt","w+");
+        char inf[300];
+        while(fgets(inf,300,list)!=NULL){
+            token(inf);
+            if(strcmp(t[5],tt[1])!=0){
+                fprintf(swap,"%s\n",inf);
+            }
+        }
+        fclose(swap);
+        fclose(list);
+        change();
+        return;
+    }
+
+}
+void deactivate(char buf[],char shenase[]) {
+    int flag = 0;
+    token(buf);
+    char tt[30][100];
+    for (int i = 0; t[i][0] != '\0'; i++) {
+        strcpy(tt[i], t[i]);
+    }
+    if(strcmp("user",tt[0])!=0) {
+        printf("%s#invalid\n", shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+    list = fopen("C:\\Users\\sepidpardaz\\Desktop\\std-list.txt", "r");
+    char info[300];
+    while (fgets(info, 300, list) != NULL) {
+            token(info);
+            if(strcmp(t[5],tt[1])==0&&strcmp(t[15],"student")==0){
+                flag=1;
+                fclose(list);
+                break;
+            }
+    }
+    if(flag==0){
+        printf("%s#not-found\n",shenase);
+        fclose(list);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#not-found\n",shenase);
+        fclose(result);
+        return;
+    }
+   
+    if(strcmp("admin",type)!=0){
+        printf("%s#premission-denied\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        fclose(list);
+        return;
+    }
+    else{
+        printf("%s#success\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#success\n",shenase);
+        fclose(result);
+        fclose(list);
+        list = fopen("C:\\Users\\sepidpardaz\\Desktop\\std-list.txt", "r");
+        swap=fopen("C:\\Users\\sepidpardaz\\Desktop\\swap.txt","w+");
+        char inf[300];
+        while(fgets(inf,300,list)!=NULL){
+            token(inf);
+            if(strcmp(t[5],tt[1])!=0){
+                fprintf(swap,"%s\n",inf);
+            }
+            else
+                fprintf(swap,"*not-active*%s\n",inf);
+        }
+        fclose(swap);
+        fclose(list);
+        change();
+        return;
+    }
+}
+void define(char buf[],char shenase[]){
+    if(strcmp(type,"student")==0){
+        printf("%s#permission-denied\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        return;
+    }
+    token(buf);
+    if(strcmp(t[0],"id")==0&&strcmp(t[2],"name")==0&&strcmp(t[4],"location")==0&&
+    strcmp(t[6],"capacity")==0&&strcmp(t[8],"type")==0&&(strcmp(t[9],"girlish")==0||strcmp(t[9],"boyish")==0)
+    &&strcmp(t[10],"meal")==0&&strcmp(t[12],"lunch-time-limit")==0&&strcmp(t[14],"dinner-time-limit")==0&&(strcmp(t[11],"dinner")==0||strcmp(t[11],"lunch")==0||strcmp(t[11],"both")==0)&&isdigit(t[7][0])!=0&&t[13][2]!='-'&&t[15][4]=='-'){
+        printf("%s#success\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#success\n",shenase);
+        fclose(result);
+        self=fopen("C:\\Users\\sepidpardaz\\Desktop\\self-list.txt","a");
+        fprintf(self,"%s\n",buf);
+        fclose(self);
+        return;
+    }
+    else{
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+}
+void de_food(char buf[],char shenase[]){
+    if(strcmp(type,"student")==0){
+        printf("%s#premission-denied\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        return;
+    }
+    token(buf);
+    if(strcmp(t[0],"id")==0&&strcmp(t[2],"name")==0&&strcmp(t[4],"type")==0&&(strcmp(t[5],"food")==0
+    ||strcmp(t[5],"dessert")==0)&&strcmp(t[6],"price")==0&&isdigit(t[1][0])!=0&&isdigit(t[7][0])!=0){
+        printf("%s#success\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#success\n",shenase);
+        fclose(result);
+        food=fopen("C:\\Users\\sepidpardaz\\Desktop\\food.txt","a+");
+        fprintf(food,"%s\n",buf);
+        fclose(food);
+        return;
+    }
+    else{
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+}
+void plan_meal(char buf[],char shenase[]){
+    token(buf);
+    char self__id[30];
+    char food__id[30];
+    strcpy(self__id,t[1]);
+    strcpy(food__id,t[7]);
+    food=fopen("C:\\Users\\sepidpardaz\\Desktop\\food.txt","r");
+    self=fopen("C:\\Users\\sepidpardaz\\Desktop\\self-list.txt","r");
+    char inf[300];
+    int flag=0;
+    while(fgets(inf,300,self)!=NULL){
+        token(inf);
+        if(strcmp(self__id,t[1])==0){
+            flag=1;
+            fclose(self);
+            break;
+        }
+    }
+    if(flag!=1){
+        printf("%s#not-found\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#not-found\n",shenase);
+        fclose(result);
+        return;
+    }
+    while(fgets(inf,300,food)!=NULL){
+        token(inf);
+        if(strcmp(food__id,t[1])==0){
+            flag=2;
+            fclose(food);
+            break;
+        }
+    }
+    fclose(food);
+    fclose(self);
+    if(flag!=2){
+        printf("%s#not-found\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#not-found\n",shenase);
+        fclose(result);
+        return;
+    }
+    if(strcmp(type,"student")==0){
+        printf("%s#premission-denied\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        return;
+    }
+    token(buf);
+    char iinfoo[300];
+    if(strcmp(t[0],"self-id")==0&&strcmp(t[2],"date")==0&&strcmp(t[4],"type")==0&&strcmp(t[6],"food-id")==0&&
+    strcmp(t[8],"count")==0&&t[3][4]=='-'&&t[3][7]=='-'&&(strcmp(t[5],"lunch")==0||strcmp(t[5],"dinner")==0)&&isdigit(t[9][0])!=0){
+        printf("%s#success\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#success\n",shenase);
+        fclose(result);
+        strcpy(s_plan[num].self_id,t[1]);
+        strcpy(s_plan[num].date,t[3]);
+        strcpy(s_plan[num].type,t[5]);
+        strcpy(s_plan[num].food_id,t[7]);
+        s_plan[num].count=char_to_int((int)strlen(t[9]),t[9]);
+        s_plan[num].number_of_food=char_to_int((int)strlen(t[9]),t[9]);
+        char ee[40];
+        strncpy(ee,t[13],4);
+        ee[4]='\0';
+        s_plan[num].lunch_start=char_to_int((int)strlen(ee),ee);
+        ee[0]=t[13][5];
+        ee[1]=t[13][6];
+        ee[2]=t[13][7];
+        ee[3]=t[13][8];
+        ee[4]='\0';
+        s_plan[num].lunch_end=char_to_int((int)(strlen(ee)),ee);
+        strncpy(ee,t[15],4);
+        ee[4]='\0';
+        s_plan[num].dinner_start=char_to_int((int)(strlen(ee)),ee);
+        ee[0]=t[15][5];
+        ee[1]=t[15][6];
+        ee[2]=t[15][7];
+        ee[3]=t[15][8];
+        ee[4]='\0';
+        s_plan[num].dinner_end=char_to_int((int)strlen(ee),ee);
+        plan=fopen("C:\\Users\\sepidpardaz\\Desktop\\plan.txt","a+");
+        fprintf(plan,"%s|lunch-start:%d|lunch-end:%d|dinner-start:%d|dinner-end:%d\n",buf,s_plan[num].lunch_start,s_plan[num].lunch_end,s_plan[num].dinner_start,s_plan[num].dinner_end);
+        fclose(plan);
+        food=fopen("C:\\Users\\sepidpardaz\\Desktop\\food.txt","r");
+        while(fgets(iinfoo,300,food)!=NULL){
+            token(iinfoo);
+            if(strcmp(food__id,t[1])==0){
+                s_plan[num].food_price=char_to_int((int)strlen(t[1]),t[1]);
+            }
+        }
+        fclose(food);
+        num++;
+    }
+    else{
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+}
+void add_news(char buf[],char shenase[]){
+    token(buf);
+    if(strcmp(type,"student")==0){
+        printf("%s#permission-denied\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        return;
+    }
+    if(strcmp("title",t[0])==0&&strcmp(t[2],"content")==0&&strcmp(t[4],"end-date")==0){
+        printf("%s#success\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#success\n",shenase);
+        fclose(result);
+        news[shomare].num=shomare;
+        strcpy(news[shomare].title,t[1]);
+        strcpy(news[shomare].akhbar,t[3]);
+        strcpy(news[shomare].end,t[5]);
+        shomare++;
+        return;
+    }
+    else{
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+}
+void token_time(int m,char dt[][100]){
+    int r=1;
+    for(int i=0;i<strlen(dt[m]);i++){
+        if(dt[m][i]=='-'){
+            strncpy(u[r],dt[m],i);
+            r++;
+            int j,p=i+1;
+            for(j=0;p<strlen(dt[m]);j++,p++){
+                dt[m][j]=dt[m][p];
+            }
+            dt[m][j]='\0';
+            i=0;
+        }
+    }
+    strcpy(u[r],dt[m]);
+}
+void change_datetime(char buf[],char shenase[]){
+    token(buf);
+    char now_date[50];
+    now_date[0]='\0';
+    if(t[3][2]=='-'){
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+    if(strcmp(t[0],"date")==0&&strcmp(t[2],"time")==0&&t[1][4]=='-'&&t[1][7]=='-'){
+        printf("%s#success\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#success\n",shenase);
+        fclose(result);
+        token_time(1,t);
+        strcat(now_date,u[1]);
+        strcat(now_date,"-");
+        strcat(now_date,u[2]);
+        strcat(now_date,"-");
+        strcat(now_date,u[3]);
+        now_date[10]='\0';
+        strcpy(timeee.current_date,now_date);
+        timeee.year=char_to_int((int)strlen(u[1]),u[1]);
+        timeee.month=char_to_int((int)strlen(u[2]),u[2]);
+        char ti[100],mi[100];
+        timeee.day=char_to_int((int)strlen(u[3]),u[3]);
+        strncpy(mi,t[3],2);
+        mi[2]='\0';
+        timeee.hour=char_to_int((int)strlen(mi),mi);
+        ti[0]=t[3][2];
+        ti[1]=t[3][3];
+        ti[2]='\0';
+        timeee.minute=char_to_int((int)strlen(ti),ti);
+        char now_time[10];
+        now_time[0]='\0';
+        strcat(now_time,mi);
+        strcat(now_time,ti);
+        strcpy(timeee.current_time,now_time);
+        return;
+    }
+    else{
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+}
+
+void charge(char buf[],char shenase[]){
+    token(buf);
+    if(strcmp(type,"student")!=0){
+        printf("%s#permission-denied\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        return;
+    }
+    if(strcmp(t[0],"amount")==0&&strcmp(t[2],"card-number")==0&&strcmp(t[4],"pass-code")==0&&t[3][4]=='-'&&t[3][9]=='-'&&t[3][14]=='-'){
+        printf("%s#success\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#success\n",shenase);
+        fclose(result);
+        for(int g=1;g<=number;g++){
+            if(strcmp(use[g].id,user)==0){
+                int len=strlen(t[1]),res;
+                res=char_to_int(len,t[1]);
+                use[g].money+=res;
+                financial=fopen("C:\\Users\\sepidpardaz\\Desktop\\financial_report.txt","a");
+                fprintf(financial,"%s|amount:%s|hesab:%d\n",user,t[1],use[g].money);
+                fclose(financial);
+                break;
+            }
+        }
+        return;
+    }
+    else{
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+}
+void reserve(char buf[],char shenase[]){
+    token(buf);
+    int flag=0;
+    int k;
+    if(strcmp(type,"student")!=0){
+        printf("%s#permission-denied\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        return;
+    }
+    if(strcmp(t[0],"self-id")==0&&strcmp(t[2],"date")==0&&strcmp(t[4],"meal")==0&&strcmp(t[6],"food-id")==0&&t[3][4]=='-'&&t[3][7]=='-'&&(strcmp(t[5],"lunch")==0||strcmp(t[5],"dinner")==0)){
+       flag=1;
+        }
+    if(flag!=1) {
+        printf("%s#invalid\n", shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+
+    for(int g=1;g<num;g++){
+        if(strcmp(t[1],s_plan[g].self_id)==0&&strcmp(t[3],s_plan[g].date)==0&&strcmp(t[7],s_plan[g].food_id)==0&&strcmp(t[5],s_plan[g].type)==0){
+            flag=2;
+            k=g;
+            break;
+        }
+    }
+    if(flag!=2){
+        printf("%s#not-found\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#not-found\n",shenase);
+        fclose(result);
+        return;
+    }
+    char tt[30][100];
+    for (int i = 0; t[i][0] != '\0'; i++) {
+        strcpy(tt[i], t[i]);
+    }
+    char self__id[300];
+    char self_type[100];
+    char student_gender[20];
+    self=fopen("C:\\Users\\sepidpardaz\\Desktop\\self-list.txt","r");
+    while(fgets(self__id,300,self)!=NULL){
+        token(self__id);
+        if(strcmp(t[1],tt[1])==0){
+            strcpy(self_type,t[9]);
+            fclose(self);
+            break;
+        }
+    }
+    for(int g=1;g<number;g++){
+        if(strcmp(user,use[g].id)==0){
+            strcpy(student_gender,use[g].gender);
+            break;
+        }
+    }
+    if(strcmp(student_gender,"female")==0&&strcmp(self_type,"boyish")==0||strcmp(student_gender,"male")==0&&strcmp(self_type,"girlish")==0){
+        printf("%s#permission-denied\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        return;
+    }
+    token_time(3,tt);
+        if((char_to_int((int)strlen(u[3]),u[3])-timeee.day>14||char_to_int((int)strlen(u[3]),u[3])-timeee.day<2)&&char_to_int((int)strlen(u[1]),u[1])==timeee.year&&char_to_int((int)strlen(u[2]),u[2])==timeee.month) {
+            printf("%s#permission-denied\n", shenase);
+            result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+            fprintf(result,"%s#permission-denied\n",shenase);
+            fclose(result);
+            return;
+
+        }
+
+    fclose(self);
+    int food_price;
+    food=fopen("C:\\Users\\sepidpardaz\\Desktop\\food.txt","r");
+    char iinfo[300];
+    while(fgets(iinfo,300,food)!=NULL){
+        token(iinfo);
+        if(strcmp(tt[7],t[1])==0){
+            food_price=char_to_int((int)strlen(t[7]),t[7]);
+            break;
+        }
+    }
+    fclose(food);
+
+        printf("%s#success\n", shenase);
+    result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+    fprintf(result,"%s#success\n",shenase);
+    fclose(result);
+        for (int g = 1; g < number; g++) {
+            if (strcmp(user, use[g].id) == 0) {
+                if(use[g].money<food_price){
+                    printf("no-money\n");
+                }
+                else{
+                    use[g].money-=food_price;
+                }
+                s_plan[k].count--;
+                reserve_food=fopen("C:\\Users\\sepidpardaz\\Desktop\\reserve-food2.txt","a");
+                fprintf(reserve_food,"%s|---->>>>|%s|price:%d|time:%d:%d\n",use[g].id,buf,food_price,timeee.hour,timeee.minute);
+                fclose(reserve_food);
+                financial=fopen("C:\\Users\\sepidpardaz\\Desktop\\financial_report.txt","a");
+                fprintf(financial,"%s|reserved-food|amount:%d|hesab:%d\n",user,food_price,use[g].money);
+                fclose(financial);
+                flag = 1;
+                break;
+            }
+        }
+        return;
+
+
+}
+void charge_student_account(char buf[],char shenase[]){
+    token(buf);
+    int flag=0;
+    if(strcmp(type,"admin")!=0){
+        printf("%s#permission-denied\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        return;
+    }
+    if(strcmp(t[0],"user")==0&&strcmp(t[2],"amount")==0){
+        flag=2;
+    }
+    else{
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+    for(int g=1;g<number;g++){
+        if(strcmp(use[g].id,t[1])==0){
+            use[g].money+=char_to_int((int)strlen(t[3]),t[3]);
+            financial=fopen("C:\\Users\\sepidpardaz\\Desktop\\financial_report.txt","a");
+            fprintf(financial,"%s|->from->%s|amount:%s|hesab:%d\n",t[1],user,t[3],use[g].money);
+            fclose(financial);
+            printf("%s#success\n",shenase);
+            result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+            fprintf(result,"%s#success\n",shenase);
+            fclose(result);
+            return;
+        }
+    }
+    printf("%s#not-found\n",shenase);
+    result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+    fprintf(result,"%s#not-found\n",shenase);
+    fclose(result);
+}
+void take_food(char buf[],char shenase[]){
+    token(buf);
+    char tt[30][100];
+    for (int i = 0; t[i][0] != '\0'; i++) {
+        strcpy(tt[i], t[i]);
+    }
+    if(strcmp(tt[0],"self-id")!=0||strcmp(tt[2],"date")!=0||strcmp(tt[4],"meal")!=0 ){
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+    int fla=0;
+    if(t[3][4]=='-'&&t[3][7]=='-'&&(strcmp(t[5],"lunch")==0||strcmp(t[5],"dinner")==0)){
+        fla=1;
+    }
+    if(fla!=1){
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+    int flag=0;
+    for(int g=1;g<num;g++){
+        if(strcmp(s_plan[g].self_id,t[1])==0){
+            flag=1;
+            break;
+        }
+    }
+    if(flag==0){
+        printf("%s#not-found\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#not-found\n",shenase);
+        fclose(result);
+        return;
+    }
+    if(strcmp(type,"admin")==0){
+        printf("%s#permission-denied\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        return;
+    }
+
+    char info[300];
+    reserve_food=fopen("C:\\Users\\sepidpardaz\\Desktop\\reserve-food2.txt","r");
+    while(fgets(info,300,reserve_food)!=NULL){
+        token(info);
+        if(strcmp(user,t[0])==0){
+            if(strcmp(tt[3],t[5])==0){
+                flag=2;
+                if(strcmp(tt[5],t[7])==0){
+                    flag=3;
+                    break;
+                }
+            }
+        }
+    }
+    fclose(reserve_food);
+    if(flag!=3){
+        printf("%s#permission-denied\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        return;
+    }
+    int h=0;
+    plan=fopen("C:\\Users\\sepidpardaz\\Desktop\\plan.txt","r");
+    while(fgets(info,300,plan)!=NULL){
+        token(info);
+        char s_l_hour[40];
+        char s_l_minute[40];
+        char e_l_hour[40];
+        char e_l_minute[40];
+        strncat(s_l_hour,t[11],2);
+        s_l_hour[2]='\0';
+        s_l_minute[0]=t[11][2];
+        s_l_minute[1]=t[11][3];
+        s_l_minute[2]='\0';
+        strncat(e_l_hour,t[13],2);
+        e_l_hour[2]='\0';
+        e_l_minute[0]=t[11][2];
+        e_l_minute[1]=t[11][3];
+        e_l_minute[2]='\0';
+        char s_d_hour[40];
+        char s_d_minute[40];
+        char e_d_hour[40];
+        char e_d_minute[40];
+        strncat(s_d_hour,t[15],2);
+        s_d_hour[2]='\0';
+        s_d_minute[0]=t[15][2];
+        s_d_minute[1]=t[15][3];
+        s_d_minute[2]='\0';
+        strncat(s_d_hour,t[11],2);
+        s_d_hour[2]='\0';
+        s_d_minute[0]=t[11][2];
+        s_d_minute[1]=t[11][3];
+        s_d_minute[2]='\0';
+        if(strcmp(t[1],tt[1])==0&&strcmp(t[3],timeee.current_date)==0) {
+            if (strcmp(t[3], timeee.current_date) == 0) {
+                if (char_to_int((int) strlen(t[11]), t[11]) <
+                    char_to_int((int) strlen(timeee.current_time), timeee.current_time) &&
+                    char_to_int((int) strlen(timeee.current_time), timeee.current_time) <
+                    char_to_int((int) strlen(t[13]), t[13]) && strcmp(tt[5], "lunch") == 0) {
+                    h=100;
+                } else if (char_to_int((int) strlen(t[15]), t[15]) <
+                           char_to_int((int) strlen(timeee.current_time), timeee.current_time) &&
+                           char_to_int((int) strlen(timeee.current_time), timeee.current_time) <
+                           char_to_int((int) strlen(t[17]), t[17]) && strcmp(tt[5], "dinner") == 0) {
+                             h=100;
+
+                }
+            }
+        }
+
+        }
+    fclose(plan);
+    if(h!=100){
+        printf("%s#permission-denied\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        return;
+    }
+    if(strcmp(tt[0],"self-id")==0&&strcmp(tt[2],"date")==0&&strcmp(tt[4],"meal")==0 ) {
+        printf("%s#success\n", shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        take_food_file=fopen("C:\\Users\\sepidpardaz\\Desktop\\take-food.txt","a");
+        fprintf(take_food_file,"%s|food_id:%s|%s|taking-time: %d/%d\n",user,t[9],buf,timeee.hour,timeee.minute);
+        fclose(take_food_file);
+        return;
+    }
+}
+void send_charge(char buf[],char shenase[]){
+    token(buf);
+    int flag=0,k;
+    for(int g=1;g<number;g++){
+        if(strcmp(use[g].id,t[1])==0&&strcmp(use[g].name_karbar,t[5])==0){
+            flag=1;
+            k=g;
+        }
+    }
+    if(flag!=1){
+        printf("%s#not-found\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#not-found\n",shenase);
+        fclose(result);
+        return;
+    }
+   if(strcmp(type,"student")!=0){
+        printf("%s#permission-denied\n",shenase);
+       result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+       fprintf(result,"%s#permission-denied\n",shenase);
+       fclose(result);
+        return;
+    }
+    if(strcmp(t[0],"user")==0&&strcmp(t[2],"amount")==0&&strcmp(t[4],"name")==0){
+        printf("%s#success\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#success\n",shenase);
+        fclose(result);
+        use[k].money+=char_to_int((int)strlen(t[3]),t[3]);
+        financial=fopen("C:\\Users\\sepidpardaz\\Desktop\\financial_report.txt","a");
+        fprintf(financial,"%s|->from->%s|amount:%d|hesab:%d\n",t[1],user,t[3],use[k].money);
+        fclose(financial);
+        return;
+    }
+    else{
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+}
+void cancel_reserve(char buf[],char shenase[]){
+     token(buf);
+     int fla=0;
+     
+
+    char tt[30][100];
+    for (int i = 0; t[i][0] != '\0'; i++) {
+        strcpy(tt[i], t[i]);
+         printf("^^^^%s\n",tt[i]);
+    }
+    if(strcmp(tt[0],"date")==0&&strcmp(tt[2],"meal")==0&&tt[1][4]=='-'&&tt[1][7]=='-'&&(strcmp(tt[3],"lunch")==0||strcmp(tt[3],"dinner")==0)){
+        fla=1;
+    }
+    if(fla!=1){
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+    if(strcmp(type,"admin")==0){
+        printf("%s#permission-denied\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        return;
+    }
+     int flag=0;
+     int k;
+     char info[300];
+     char meal_type[40];
+     reserve_food=fopen("C:\\Users\\sepidpardaz\\Desktop\\reserve-food2.txt","r");
+     while(fgets(info,300,reserve_food)!=NULL){
+         token(info);
+         if(strcmp(t[0],user)==0){
+             flag=2;
+             if(strcmp(tt[1],t[5])==0&&strcmp(tt[3],t[7])==0){
+                 flag=3;
+                 strcpy(meal_type,t[7]);
+                 break;
+             }
+         }
+     }
+     fclose(reserve_food);
+     if(flag!=3){
+         printf("%s#not-found\n",shenase);
+         result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+         fprintf(result,"%s#not-found\n",shenase);
+         fclose(result);
+         return;
+     }
+
+     if(strcmp(type,"admin")==0){
+         printf("%s#permission-denied\n",shenase);
+         result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+         fprintf(result,"%s#permission-denied\n",shenase);
+         fclose(result);
+         return;
+     }
+    plan=fopen("C:\\Users\\sepidpardaz\\Desktop\\plan.txt","r");
+    while(fgets(info,300,plan)!=NULL) {
+        token(info);
+        char s_l_hour[40];
+        char s_l_minute[40];
+        char e_l_hour[40];
+        char e_l_minute[40];
+        strncat(s_l_hour,t[11],2);
+        s_l_hour[2]='\0';
+        s_l_minute[0]=t[11][2];
+        s_l_minute[1]=t[11][3];
+        s_l_minute[2]='\0';
+        strncat(e_l_hour,t[13],2);
+        e_l_hour[2]='\0';
+        e_l_minute[0]=t[11][2];
+        e_l_minute[1]=t[11][3];
+        e_l_minute[2]='\0';
+        char s_d_hour[40];
+        char s_d_minute[40];
+        char e_d_hour[40];
+        char e_d_minute[40];
+        strncat(s_d_hour,t[15],2);
+        s_d_hour[2]='\0';
+        s_d_minute[0]=t[15][2];
+        s_d_minute[1]=t[15][3];
+        s_d_minute[2]='\0';
+        strncat(s_d_hour,t[11],2);
+        s_d_hour[2]='\0';
+        s_d_minute[0]=t[11][2];
+        s_d_minute[1]=t[11][3];
+        s_d_minute[2]='\0';
+        if(compare(t[3])==1) {
+            if(strcmp(timeee.current_date,t[3])==0) {
+                if (strcmp(tt[3], "lunch") == 0) {
+                    if (char_to_int((int) strlen(s_l_hour), s_l_hour) - timeee.hour <= 1) {
+                        printf("%s#permission-denied\n", shenase);
+                        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+                        fprintf(result,"%s#permission-denied\n",shenase);
+                        fclose(result);
+                        return;
+                    }
+                }
+                if (strcmp(tt[3], "dinner") == 0) {
+                    if (char_to_int((int) strlen(s_d_hour), s_d_hour) - timeee.hour <= 1) {
+                        printf("%s#permission-denied\n", shenase);
+                        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+                        fprintf(result,"%s#permission-denied\n",shenase);
+                        fclose(result);
+                        return;
+
+                    }
+                } else {
+                    printf("%s#permission-denied\n", shenase);
+                    result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+                    fprintf(result,"%s#permission-denied\n",shenase);
+                    fclose(result);
+                    return;
+                }
+            }
+        }
+        else {
+            printf("%s#permission-denied\n", shenase);
+            result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+            fprintf(result,"%s#permission-denied\n",shenase);
+            fclose(result);
+            return;
+        }
+    }
+    fclose(plan);
+    if(strcmp(tt[0],"date")==0&&strcmp(tt[2],"meal")==0){
+         printf("%s#success\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#success\n",shenase);
+        fclose(result);
+         for(int g=1;g<number;g++){
+             if(strcmp(user,use[g].id)==0){
+                 use[g].money+=(char_to_int((int)strlen(t[11]),t[11]))*90/100;
+               cancel=fopen("C:\\Users\\sepidpardaz\\Desktop\\cancel-reserve.txt","a");
+                 financial=fopen("C:\\Users\\sepidpardaz\\Desktop\\financial_report.txt","a");
+                 swap=fopen("C:\\Users\\sepidpardaz\\Desktop\\swap2.txt","w");
+                 fprintf(financial,"%s|canceled-reserved|amount:%s|hesab:%d",user,t[11],use[g].money);
+                 fprintf(cancel,"%s|canceled-reserve|%s\n",user,tt[3]);
+                 fclose(cancel);
+                 fclose(financial);
+                 char iinfo[300];
+                 reserve_food=fopen("C:\\Users\\sepidpardaz\\Desktop\\reserve-food2.txt","r");
+                 while(fgets(iinfo,300,reserve_food)){
+                    // printf("%s %s\n",info,iinfo);
+                     if(strcmp(info,iinfo)!=0){
+                         fprintf(swap,"%s\n",iinfo);
+                     }
+                 }
+                 fclose(reserve_food);
+                 fclose(swap);
+                 swap=fopen("C:\\Users\\sepidpardaz\\Desktop\\swap2.txt","r");
+                 reserve_food=fopen("C:\\Users\\sepidpardaz\\Desktop\\reserve-food2.txt","w");
+                 while(fgets(iinfo,300,swap)!=NULL){
+                     fprintf(reserve_food,"%s\n",iinfo);
+                 }
+                 fclose(swap);
+                 fclose(reserve_food);
+
+             }
+         }
+         return;
+     }
+
+}
+void change_student_pass(char buf[],char shenase[]){
+    token(buf);
+    char tt[30][100];
+    for (int i = 0; t[i][0] != '\0'; i++) {
+        strcpy(tt[i], t[i]);
+        
+    }
+    if(strcmp(tt[0],"user")!=0||strcmp(tt[2],"new-pass")!=0){
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+
+
+    int flag=0,k;
+    for(int g=1;g<number;g++) {
+        if (strcmp(tt[1], use[g].id) == 0) {
+            flag = 1;
+            k = g;
+        }
+    }
+    if(flag==0){
+        printf("%s#not-found\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#not-found\n",shenase);
+        fclose(result);
+        return;
+    }
+     if(strcmp(type,"student")==0){
+         printf("%s#permission-denied\n",shenase);
+         result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+         fprintf(result,"%s#permission-denied\n",shenase);
+         fclose(result);
+         return;
+     }
+     if(strcmp(tt[0],"user")==0&&strcmp(tt[2],"new-pass")==0) {
+         printf("%s#success\n", shenase);
+         result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+         fprintf(result,"%s#success\n",shenase);
+         fclose(result);
+         list = fopen("C:\\Users\\sepidpardaz\\Desktop\\std-list.txt", "r");
+         char iinfo[300];
+         while (fgets(iinfo, 300, list) != NULL) {
+             token(iinfo);
+             if (strcmp(tt[1], t[5]) == 0) {
+                 for (int i = 0; i < (strlen(iinfo)); i++) {
+                     if (iinfo[i] == 'p' && iinfo[i + 1] == 'a' && iinfo[i + 2] == 's' &&
+                         iinfo[i + 3] == 's' && iinfo[i + 5] == 'o' && iinfo[i + 7] == 'd') {
+                         i = i + 9;
+                         for (int j = 0; j < (int) strlen(tt[3]); j++, i++) {
+                             if (info_std[i] == '|') {
+                                 for (int s = (int) strlen(iinfo) - 1 + strlen(tt[3]); s >= i + 1; s--) {
+                                     iinfo[s] = iinfo[s - 1];
+                                 }
+                             }
+                             iinfo[i] = tt[3][j];
+                         }
+                         if (iinfo[i] == '|') {
+                             continue;
+                         }
+                         while (i < strlen(iinfo)) {
+                             if (iinfo[i] == '|') {
+                                 break;
+                             }
+                             int j;
+                             for (j = i; j < strlen(iinfo) - 1; j++) {
+                                 iinfo[j] = iinfo[j + 1];
+
+
+                             }
+                             iinfo[j] = '\0';
+
+                         }
+
+
+                         strcpy(use[k].pass, tt[3]);
+                         fclose(list);
+
+                     }
+                 }
+                 swap = fopen("C:\\Users\\sepidpardaz\\Desktop\\swap2.txt", "w+");
+                 list = fopen("C:\\Users\\sepidpardaz\\Desktop\\std-list.txt", "r");
+                 char inf[300];
+                 while (fgets(inf, 300, list) != NULL) {
+                     token(inf);
+                     if (strcmp(tt[1], t[5]) == 0) {
+                         fprintf(swap, "%s\n", iinfo);
+                     } else {
+                         fprintf(swap, "%s\n", inf);
+
+                     }
+                 }
+                 fclose(list);
+                 fclose(swap);
+                 change();
+
+             }
+         }
+         return;
+     }
+     printf("%s#invalid\n",shenase);
+    result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+    fprintf(result,"%s#invalid\n",shenase);
+    fclose(result);
+     return;
+}
+void see_reserve(){
+    char info[100];
+    for(int g=1;g<number;g++){
+        if(strcmp(user,use[g].id)==0){
+            reserve_food=fopen("C:\\Users\\sepidpardaz\\Desktop\\reserve-food2.txt","r");
+            while(fgets(info,300,reserve_food)!=NULL){
+                printf("%s\n",info);
+            }
+            fclose(reserve_food);
+            break;
+        }
+    }
+}
+void financial_report(){
+    char info[300];
+    if(strcmp(user,"admin")==0){
+        return;
+    }
+    financial=fopen("C:\\Users\\sepidpardaz\\Desktop\\financial_report.txt","r");
+    printf("$$$$$$Financial transaction$$$$$$\n");
+    while(fgets(info,300,financial)!=NULL){
+        token(info);
+        if(strcmp(user,t[0])==0){
+            printf("%s\n",info);
+        }
+    }
+    fclose(financial);
+}
+
+void check_news(char shenase[]){
+    if(strcmp(type,"admin")==0){
+        printf("%s#permision-denied\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        return;
+    }
+    int flag=0;
+    for(int g=1;g<shomare;g++){
+        if(compare(news[g].end)==1){
+            printf("%s\n",news[g].akhbar);
+            flag=1;
+        }
+    }
+    if(flag==0){
+        printf("%s#not-found\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#not-found\n",shenase);
+        fclose(result);
+        return;
+    }
+    if(flag==1){
+        printf("%s#success\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#success\n",shenase);
+        fclose(result);
+        return;
+    }
+}
+void take_food_report(){
+    if(strcmp(type,"admin")==0){
+        printf("permission-denied\n");
+        return;
+    }
+    char info[300];
+    take_food_file=fopen("C:\\Users\\sepidpardaz\\Desktop\\take-food.txt","r");
+    while(fgets(info,300,take_food_file)!=NULL){
+        printf("%s\n",info);
+    }
+    fclose(take_food_file);
+}
+void daily_reserve(char buf[],char shenase[]){
+    token(buf);
+    if(strcmp(t[0],"self-id")!=0||strcmp(t[2],"food-id")!=0){
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+    if(strcmp(type,"admin")==0){
+        printf("%s#permission-denied\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        return;
+    }
+    int flag=0,k;
+    for(int g=1;g<num;g++){
+        if(strcmp(s_plan[g].self_id,t[1])==0&&strcmp(s_plan[g].food_id,t[3])==0){
+            flag=1;
+            k=g;
+            break;
+        }
+    }
+    if(flag==0){
+        printf("%s#not-found\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#not-found\n",shenase);
+        fclose(result);
+        return;
+    }
+    if(s_plan[k].count>0){
+        printf("1\n");
+        for(int g=1;g<number;g++){
+            if(strcmp(user,use[g].id)==0){
+                use[g].money-=(2)*(s_plan[k].food_price);
+            }
+        }
+        s_plan[k].count--;
+    }
+    char tt[30][100];
+    for (int i = 0; t[i][0] != '\0'; i++) {
+        strcpy(tt[i], t[i]);
+    }
+    plan=fopen("C:\\Users\\sepidpardaz\\Desktop\\plan.txt","r");
+    char info[300];
+    int h=0;
+    while(fgets(info,300,plan)!=NULL){
+          token(info);
+          char s_l_hour[40];
+          char s_l_minute[40];
+          char e_l_hour[40];
+          char e_l_minute[40];
+          strncpy(s_l_hour,t[11],2);
+          s_l_hour[2]='\0';
+          s_l_minute[0]=t[11][2];
+          s_l_minute[1]=t[11][3];
+          s_l_minute[2]='\0';
+         strncpy(e_l_hour,t[13],2);
+         e_l_hour[2]='\0';
+         e_l_minute[0]=t[11][2];
+         e_l_minute[1]=t[11][3];
+         e_l_minute[2]='\0';
+        char s_d_hour[40];
+        char s_d_minute[40];
+        char e_d_hour[40];
+        char e_d_minute[40];
+        strncpy(s_d_hour,t[15],2);
+        s_d_hour[2]='\0';
+        s_d_minute[0]=t[15][2];
+        s_d_minute[1]=t[15][3];
+        s_d_minute[2]='\0';
+        strncpy(s_d_hour,t[11],2);
+        s_d_hour[2]='\0';
+        s_d_minute[0]=t[11][2];
+        s_d_minute[1]=t[11][3];
+        s_d_minute[2]='\0';
+       if(strcmp(t[1],tt[1])==0&&strcmp(t[7],tt[3])==0&&strcmp(t[3],timeee.current_date)==0) {
+           if (strcmp(t[3], timeee.current_date) == 0) {
+               if (char_to_int((int) strlen(timeee.current_time), timeee.current_time) <
+                   char_to_int((int) strlen(t[13]), t[13]) && strcmp(t[5], "lunch") == 0) {
+                   h=100;
+                   if (char_to_int((int) strlen(e_l_minute), e_l_minute) - timeee.minute < 30 &&
+                       char_to_int((int) strlen(e_l_hour), e_l_hour) - timeee.hour == 1) {
+                       printf("%s#permission-denied\n", shenase);
+                       result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+                       fprintf(result,"%s#permission-denied\n",shenase);
+                       fclose(result);
+                       return;
+                   }
+               } else if (char_to_int((int) strlen(t[15]), t[15]) <
+                          char_to_int((int) strlen(timeee.current_time), timeee.current_time) &&
+                          char_to_int((int) strlen(timeee.current_time), timeee.current_time) <
+                          char_to_int((int) strlen(t[17]), t[17]) && strcmp(t[5], "dinner") == 0) {
+                   h = 100;
+                   if (char_to_int((int) strlen(e_d_minute), e_d_minute) - timeee.minute < 30 &&
+                       char_to_int((int) strlen(e_d_hour), e_d_hour) - timeee.hour == 1) {
+                       printf("%s#permission-denied\n", shenase);
+                       result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+                       fprintf(result,"%s#permission-denied\n",shenase);
+                       fclose(result);
+                       return;
+                   }
+               }
+
+
+           }
+       }
+
+
+    }
+    if(h!=100) {
+        printf("%s#permission-denied\n", shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        return;
+    }
+    fclose(plan);
+    printf("%s#success\n",shenase);
+    result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+    fprintf(result,"%s#success\n",shenase);
+    fclose(result);
+
+}
+void menu_admin(){
+    printf("1.logout\n2.change-pass\n3.approve\n4.remove-student\n5.deactivate\n6.define-self\n7.define-food\n"
+           "8.define-meal-plan\n9.charge-student-account\n10.add-news\n11.statics of reserve\n12.user report\n13.change student password");
+}
+void user_report_for_admin(char id[]){
+    if(strcmp(user,"admin")!=0){
+        printf("permission-denied\n");
+        return;
+    }
+    financial=fopen("C:\\Users\\sepidpardaz\\Desktop\\financial_report.txt","r");
+    char info[300];
+    printf("FINANCIAL REPORT:\n");
+    while(fgets(info,300,financial)!=NULL){
+        token(info);
+        if(strcmp(t[0],id)==0){
+            printf("%s\n",info);
+        }
+    }
+    fclose(financial);
+    reserve_food=fopen("C:\\Users\\sepidpardaz\\Desktop\\reserve-food2.txt","r");
+    printf("RESERVED FOOD:\n");
+        while(fgets(info,300,reserve_food)!=NULL){
+            token(info);
+            if(strcmp(t[0],id)==0){
+                printf("%s\n",info);
+            }
+        }
+    fclose(reserve_food);
+        take_food_file=fopen("C:\\Users\\sepidpardaz\\Desktop\\take-food.txt","r");
+        printf("TAKEN FOOD:\n");
+        while(fgets(info,300,take_food_file)!=NULL){
+            token(info);
+            if(strcmp(t[0],id)==0){
+                printf("%s\n",info);
+            }
+        }
+        fclose(take_food_file);
+        cancel=fopen("C:\\Users\\sepidpardaz\\Desktop\\cancel-reserve.txt","r");
+        printf("canceled food:\n");
+        while(fgets(info,300,cancel)!=NULL){
+            token(info);
+            if(strcmp(t[0],id)==0){
+                printf("%s\n",info);
+            }
+        }
+        fclose(cancel);
+
+}
+void statics_of_reserve(){
+    printf("statics of reserve:\n");
+    for(int g=1;g<num;g++){
+        printf("self-id:%s|food-id:%s|reserved:%d|remaining:%d\n",s_plan[g].self_id,s_plan[g].food_id,s_plan[g].number_of_food-s_plan[g].count,s_plan[g].count);
+    }
+    reserve_food=fopen("C:\\Users\\sepidpardaz\\Desktop\\reserve-food2.txt","r");
+    char info[300];
+    while(fgets(info,300,reserve_food)!=NULL){
+        printf("%s\n",info);
+    }
+    fclose(reserve_food);
+}
+void student_menu(){
+    printf("1.logout\n2.change-pass\n3.reserve\n4.take food\n5.charge account\n6.send charge\n7.see reserved\n8.cancel reserve\n9.daily reserve\n10.change self\n11.financial report\n12.take food report\n13.check news\n");
+}
+void change_self(char buf[],char shenase[]){
+    token(buf);
+    if(strcmp(t[0],"date")!=0||strcmp(t[2],"meal")!=0||strcmp(t[4],"new-self-id")!=0){
+        printf("%s#invalid\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#invalid\n",shenase);
+        fclose(result);
+        return;
+    }
+    if(strcmp(type,"admin")==0){
+        printf("%s#permission-denied\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#permission-denied\n",shenase);
+        fclose(result);
+        return;
+    }
+    char tt[30][100];
+    for (int i = 0; t[i][0] != '\0'; i++) {
+        strcpy(tt[i], t[i]);
+        // printf("^^^^%s\n",tt[i]);
+    }
+    char info[300];
+    int flag=0;
+    reserve_food=fopen("C:\\Users\\sepidpardaz\\Desktop\\reserve-food2.txt","r");
+    while(fgets(info,300,reserve_food)!=NULL){
+        token(info);
+        if(strcmp(t[0],user)==0){
+            if(strcmp(tt[1],t[5])==0){
+                flag=1;
+                break;
+            }
+        }
+    }
+    fclose(reserve_food);
+    if(flag!=1){
+        printf("%s#not-found\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#not-found\n",shenase);
+        fclose(result);
+        return;
+    }
+    plan=fopen("C:\\Users\\sepidpardaz\\Desktop\\plan.txt","r");
+    while(fgets(info,300,plan)!=NULL){
+        token(info);
+        if(strcmp(tt[5],t[1])==0){
+            flag=2;
+            break;
+        }
+    }
+    if(flag!=2){
+        printf("%s#not-found\n",shenase);
+        result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+        fprintf(result,"%s#not-found\n",shenase);
+        fclose(result);
+        return;
+    }
+    fclose(self);
+    plan=fopen("C:\\Users\\sepidpardaz\\Desktop\\plan.txt","r");
+    while(fgets(info,300,plan)!=NULL){
+        token(info);
+        char s_l_hour[40];
+        char s_l_minute[40];
+        char e_l_hour[40];
+        char e_l_minute[40];
+        strncpy(s_l_hour,t[11],2);
+        s_l_hour[2]='\0';
+        s_l_minute[0]=t[11][2];
+        s_l_minute[1]=t[11][3];
+        s_l_minute[2]='\0';
+        strncpy(e_l_hour,t[13],2);
+        e_l_hour[2]='\0';
+        e_l_minute[0]=t[11][2];
+        e_l_minute[1]=t[11][3];
+        e_l_minute[2]='\0';
+        char s_d_hour[40];
+        char s_d_minute[40];
+        char e_d_hour[40];
+        char e_d_minute[40];
+        strncpy(s_d_hour,t[15],2);
+        s_d_hour[2]='\0';
+        s_d_minute[0]=t[15][2];
+        s_d_minute[1]=t[15][3];
+        s_d_minute[2]='\0';
+        strncpy(s_d_hour,t[11],2);
+        s_d_hour[2]='\0';
+        s_d_minute[0]=t[11][2];
+        s_d_minute[1]=t[11][3];
+        s_d_minute[2]='\0';
+        if(strcmp(timeee.current_date,tt[1])==0) {
+            if (char_to_int((int) strlen(timeee.current_time), timeee.current_time) <
+                char_to_int((int) strlen(t[13]), t[13])) {
+                if (char_to_int((int) strlen(s_l_hour), s_l_hour) - timeee.hour < 3) {
+                    printf("12%s#permission-denied\n", shenase);
+                    result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+                    fprintf(result,"%s#permission-denied\n",shenase);
+                    fclose(result);
+                    return;
+                }
+            } else if (char_to_int((int) strlen(timeee.current_time), timeee.current_time) <
+                       char_to_int((int) strlen(t[17]), t[17])) {
+                if (char_to_int((int) strlen(s_d_hour), s_d_hour) - timeee.hour < 3) {
+                    printf("%s#permission-denied\n", shenase);
+                    result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+                    fprintf(result,"%s#permission-denied\n",shenase);
+                    fclose(result);
+                    return;
+
+                }
+            }
+
+
+        }
+        else if(compare(tt[1])==0) {
+            printf("%s#permission-denied\n", shenase);
+            result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+            fprintf(result,"%s#permission-denied\n",shenase);
+            fclose(result);
+            return;
+        }
+
+    }
+    fclose(plan);
+    printf("%s#success\n",shenase);
+    reserve_food=fopen("C:\\Users\\sepidpardaz\\Desktop\\reserve-food2.txt","r");
+    swap=fopen("C:\\Users\\sepidpardaz\\Desktop\\swap2.txt","w");
+    while(fgets(info,300,reserve_food)!=NULL){
+        token(info);
+        if(strcmp(t[0],user)==0){
+            if(strcmp(tt[1],t[5])==0){
+                fprintf(swap,"*%s|changed to %s\n",user,tt[5]);
+            }
+            else{
+                fprintf(swap,"%s\n",info);
+            }
+        }
+    }
+    fclose(reserve_food);
+    fclose(swap);
+    reserve_food=fopen("C:\\Users\\sepidpardaz\\Desktop\\reserve-food2.txt","w");
+    swap=fopen("C:\\Users\\sepidpardaz\\Desktop\\swap2.txt","r");
+    while(fgets(info,300,swap)!=NULL){
+        fprintf(reserve_food,"%s\n",info);
+    }
+    fclose(swap);
+    fclose(reserve_food);
+
+}
+int main(){
+    strcpy(use[number].id,"admin");
+    number++;
+    int f_input;
+    char str[100];
+    char string[200];
+    printf("what do you wanna work with?\n1.File\n2.console\n");
+    scanf("%d",&f_input);
+    if(f_input==2) {
+        printf("1.log in\n2.register\n3.change date time\n");
+        scanf("%d", &f_input);
+        while (f_input == 1 || f_input == 2||f_input==3) {
+            if (f_input == 1) {
+                string[0] = '\0';
+                strcat(string, "user:");
+                printf("Enter user: \n");
+                scanf("%s", str);
+                strcat(string, str);
+                printf("Enter password:\n");
+                scanf("%s", str);
+                strcat(string, "|password:");
+                strcat(string, str);
+                login(string, "  ");
+                if (strcmp(type, "admin") == 0) {
+                    menu_admin();
+                    int input;
+                    scanf("%d", &input);
+                    while (1) {
+                        if (input == 1) {
+                            printf("Enter the user: \n");
+                            string[0] = '\0';
+                            scanf("%s", str);
+                            strcat(string, "user:");
+                            strcat(string, str);
+                            logout(string, "  ");
+                            break;
+                        }
+                        if (input == 2) {
+                            printf("Enter the user: \n");
+                            string[0] = '\0';
+                            scanf("%s", str);
+                            strcat(string, "user:");
+                            strcat(string, str);
+                            strcat(string, "|old-pass:");
+                            printf("Enter the old pass: \n");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            strcat(string, "|new-pass:");
+                            printf("Enter the new pass:\n");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            change_pass(string, "  ");
+                            menu_admin();
+                        }
+                        if (input == 3) {
+                            int in = 3;
+                            while (in == 3) {
+                                string[0] = '\0';
+                                strcat(string, "user:");
+                                printf("Enter the user:\n");
+                                scanf("%s", str);
+                                strcat(string, str);
+                                approve(string, "  ");
+                                printf("if you want to add more students,enter 3 else enter 99\n");
+                                scanf("%d", &in);
+                                if (in == 99) {
+                                    menu_admin();
+                                    break;
+                                }
+                            }
+                        }
+                        if (input == 4) {
+                            string[0] = '\0';
+                            printf("Enter the user: \n");
+                            strcat(string, "user:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            remove_std(string, "  ");
+                            
+
+                        }
+                        if (input == 5) {
+                            string[0] = '\0';
+                            printf("Enter the user: \n");
+                            strcat(string, "user:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            deactivate(string, "  ");
+                        }
+                        if (input == 6) {
+                            string[0] = '\0';
+                            printf("Enter the id: \n");
+                            strcat(string, "id:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            printf("Enter the name: \n");
+                            strcat(string, "|name:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            printf("%s\n", string);
+                            printf("Enter the location: \n");
+                            strcat(string, "|location:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            printf("Enter the capacity: \n");
+                            strcat(string, "|capacity:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            printf("%s\n", string);
+                            printf("Enter the type: \n");
+                            strcat(string, "|type:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            printf("%s\n", string);
+                            printf("Enter the meal: \n");
+                            strcat(string, "|meal:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            printf("%s\n", string);
+                            printf("Enter the lunch-time-limit: \n");
+                            strcat(string, "|lunch-time-limit:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            printf("Enter the dinner-time-limit: \n");
+                            strcat(string, "|dinner-time-limit:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            define(string, "  ");
+                            menu_admin();
+                        }
+                        if (input == 7) {
+                            string[0] = '\0';
+                            printf("Enter the id: \n");
+                            strcat(string, "id:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            printf("Enter the name: \n");
+                            strcat(string, "|name:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            printf("Enter the type: \n");
+                            strcat(string, "|type:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            printf("Enter the price:\n");
+                            strcat(string, "|price:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            de_food(string, "  ");
+                            printf("%s\n", string);
+                            menu_admin();
+                        }
+                        if (input == 8) {
+                            string[0] = '\0';
+                            printf("Enter the self-id: \n");
+                            strcat(string, "self-id:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            printf("Enter the date: \n");
+                            strcat(string, "|date:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            printf("Enter the type: \n");
+                            strcat(string, "|type:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            printf("Enter the food-id: \n");
+                            strcat(string, "|food-id:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            printf("Enter the count: \n");
+                            strcat(string, "|count:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            plan_meal(string, "  ");
+                            menu_admin();
+                            
+                        }
+                        if (input == 9) {
+                            string[0] = '\0';
+                            printf("Enter the user: \n");
+                            strcat(string, "user:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            printf("Enter the amount: \n");
+                            strcat(string, "|amount:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            charge_student_account(string, "  ");
+                            menu_admin();
+                            
+                        }
+                        if (input == 10) {
+                            string[0] = '\0';
+                            printf("Enter the title: \n");
+                            strcat(string, "title:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            printf("Enter the content: \n");
+                            strcat(string, "|content:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            printf("Enter the end-date: \n");
+                            strcat(string, "|end-date:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            add_news(string, "  ");
+                            menu_admin();
+                        }
+                        if (input == 11) {
+                            statics_of_reserve();
+                            menu_admin();
+                        }
+                        if (input == 12) {
+                            printf("Enter the id: \n");
+                            scanf("%s", str);
+                            user_report_for_admin(str);
+                            menu_admin();
+                        }
+                        if(input==13){
+                            string[0]='\0';
+                            printf("Enter the user: \n");
+                            strcat(string, "user:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            printf("Enter the new-pass: \n");
+                            strcat(string, "|new-pass:");
+                            scanf("%s", str);
+                            strcat(string, str);
+                            change_student_pass(string,"  ");
+                            menu_admin();
+
+                        }
+                        scanf("%d", &input);
+                    }
+                }
+                if (strcmp(type, "student") == 0) {
+                    student_menu();
+                    int input;
+                    scanf("%d",&input);
+                    while(1){
+                        if(input==1){
+                            printf("Enter the user: \n");
+                            string[0] = '\0';
+                            scanf("%s", str);
+                            strcat(string, "user:");
+                            strcat(string, str);
+                            logout(string, "  ");
+                            break;
+                        }
+                        if (input == 2) {
+                                printf("Enter the user: \n");
+                                string[0] = '\0';
+                                scanf("%s", str);
+                                strcat(string, "user:");
+                                strcat(string, str);
+                                strcat(string, "|old-pass:");
+                                printf("Enter the old pass: \n");
+                                scanf("%s", str);
+                                strcat(string, str);
+                                strcat(string, "|new-pass:");
+                                printf("Enter the new pass:\n");
+                                scanf("%s", str);
+                                strcat(string, str);
+                                change_pass(string, "  ");
+                                student_menu();
+                        }
+                        if(input==3){
+                            string[0]='\0';
+                            printf("Enter the self-id: \n");
+                            scanf("%s", str);
+                            strcat(string, "self-id:");
+                            strcat(string, str);
+                            printf("Enter the date: \n");
+                            scanf("%s", str);
+                            strcat(string, "|date:");
+                            strcat(string, str);
+                            printf("Enter the meal: \n");
+                            scanf("%s", str);
+                            strcat(string, "|meal:");
+                            strcat(string, str);
+                            printf("Enter the food-id: \n");
+                            scanf("%s", str);
+                            strcat(string, "|food-id:");
+                            strcat(string, str);
+                            printf("%s",string);
+                            reserve(string,"  ");
+                            student_menu();
+
+
+                        }
+                        if(input==4){
+                            string[0]='\0';
+                            printf("Enter the self-id: \n");
+                            scanf("%s", str);
+                            strcat(string, "self-id:");
+                            strcat(string, str);
+                            printf("Enter the date: \n");
+                            scanf("%s", str);
+                            strcat(string, "|date:");
+                            strcat(string, str);
+                            printf("Enter the meal: \n");
+                            scanf("%s", str);
+                            strcat(string, "|meal:");
+                            strcat(string, str);
+                            take_food(string,"  ");
+                            student_menu();
+
+                        }
+                        if(input==5){
+                            string[0]='\0';
+                            printf("Enter the amount: \n");
+                            scanf("%s", str);
+                            strcat(string, "amount:");
+                            strcat(string, str);
+                            printf("Enter the card-number: \n");
+                            scanf("%s", str);
+                            strcat(string, "|card-number:");
+                            strcat(string, str);
+                            printf("Enter the pass-code: \n");
+                            scanf("%s", str);
+                            strcat(string, "|pass-code:");
+                            strcat(string, str);
+                            charge(string,"  ");
+                            student_menu();
+
+                        }
+                        if(input==6){
+                            string[0]='\0';
+                            printf("Enter the user: \n");
+                            scanf("%s", str);
+                            strcat(string, "user:");
+                            strcat(string, str);
+                            printf("Enter the amount: \n");
+                            scanf("%s", str);
+                            strcat(string, "|amount:");
+                            strcat(string, str);
+                            printf("Enter the name: \n");
+                            scanf("%s", str);
+                            strcat(string, "|name:");
+                            strcat(string, str);
+                            printf("%s\n",string);
+                            send_charge(string,"  ");
+                            student_menu();
+
+                        }
+                        if(input==7){
+                            see_reserve();
+                            student_menu();
+
+                        }
+                        if(input==8){
+                            string[0]='\0';
+                            printf("Enter the date: \n");
+                            scanf("%s", str);
+                            strcat(string, "date:");
+                            strcat(string, str);
+                            printf("Enter the meal: \n");
+                            scanf("%s", str);
+                            strcat(string, "|meal:");
+                            strcat(string, str);
+                            cancel_reserve(string,"  ");
+                            student_menu();
+
+                        }
+                        if(input==9){
+                            string[0]='\0';
+                            printf("Enter the self-id: \n");
+                            scanf("%s", str);
+                            strcat(string, "self-id:");
+                            strcat(string, str);
+                            printf("Enter the food-id: \n");
+                            scanf("%s", str);
+                            strcat(string, "|food-id:");
+                            strcat(string, str);
+                            daily_reserve(string,"  ");
+                            student_menu();
+
+                        }
+                        if(input==10){
+                            string[0]='\0';
+                            printf("Enter the date: \n");
+                            scanf("%s", str);
+                            strcat(string, "date:");
+                            strcat(string, str);
+                            printf("Enter the meal: \n");
+                            scanf("%s", str);
+                            strcat(string, "|meal:");
+                            strcat(string, str);
+                            printf("Enter the new-self: \n");
+                            scanf("%s", str);
+                            strcat(string, "|new-self:");
+                            strcat(string, str);
+                            change_self(string,"  ");
+                            student_menu();
+
+                        }
+                        if(input==11){
+                            financial_report();
+                            student_menu();
+
+                        }
+                        if(input==12){
+                            take_food_report();
+                            student_menu();
+
+                        }
+                        if(input==13){
+                            check_news("  ");
+                            student_menu();
+                        }
+                        scanf("%d",&input);
+                    }
+                }
+
+            }
+            if (f_input == 2) {
+                string[0] = '\0';
+                printf("Enter the name: \n");
+                strcat(string, "name:");
+                scanf("%s", str);
+                strcat(string, str);
+                printf("Enter the family: \n");
+                strcat(string, "|family:");
+                scanf("%s", str);
+                strcat(string, str);
+                printf("Enter the user-id: \n");
+                strcat(string, "|user-id:");
+                scanf("%s", str);
+                strcat(string, str);
+                printf("Enter the password: \n");
+                strcat(string, "|password:");
+                scanf("%s", str);
+                strcat(string, str);
+                printf("Enter the national-id-code: \n");
+                strcat(string, "|national-id-code:");
+                scanf("%s", str);
+                strcat(string, str);
+                printf("Enter the birthdate: \n");
+                strcat(string, "|birthdate:");
+                scanf("%s", str);
+                strcat(string, str);
+                printf("Enter the gender: \n");
+                strcat(string, "|gender:");
+                scanf("%s", str);
+                strcat(string, str);
+                printf("Enter the type: \n");
+                strcat(string, "|type:");
+                scanf("%s", str);
+                strcat(string, str);
+                regi(string, "  ");
+
+            }
+            if(f_input==3){
+                string[0]='\0';
+                printf("Enter the date: \n");
+                strcat(string, "date:");
+                scanf("%s", str);
+                strcat(string, str);
+                printf("Enter the time: \n");
+                strcat(string, "|time:");
+                scanf("%s", str);
+                strcat(string, str);
+                change_datetime(string," ");
+            }
+            printf("1.log in\n2.register\n3.change date time\n");
+            scanf("%d",&f_input);
+        }
+    }
+    else if(f_input==1) {
+        fpin = fopen("C:\\Users\\sepidpardaz\\Music\\project.txt", "r");
+        if (fpin == NULL)
+            return 0;
+        int i;
+        char buf[300];
+        char shenase[200];
+        char oper[200];
+        while ((fgets(buf, 300, fpin)) != NULL) {
+            for (i = 0; i < strlen(oper); i++) {
+                oper[i] = '\0';
+                shenase[i] = '\0';
+            }
+            int count = 0;
+            for (i = 0; i < strlen(buf); i++) {
+                if (buf[i] == '#') {
+                    if (count == 1) {
+                        strncpy(oper, buf, i);
+                        oper[i] = '\0';
+
+                    } else {
+                        strncpy(shenase, buf, i);
+                        shenase[i] = '\0';
+                        count = 1;
+                    }
+                    for (int j = i + 1, s = 0; j <= strlen(buf); j++, s++) {
+                        buf[s] = buf[j];
+                    }
+                    i = 0;
+                }
+            }
+             //printf("%s\n",oper);
+            if (strcmp(oper, "register") == 0) {
+                regi(buf, shenase);
+            } else if (strcmp(oper, "login") == 0) {
+                login(buf, shenase);
+            } else if (strcmp(oper, "logout") == 0) {
+                logout(buf, shenase);
+            } else if (strcmp(oper, "change-pass") == 0) {
+                change_pass(buf, shenase);
+            } else if (strcmp(oper, "approve") == 0) {
+                approve(buf, shenase);
+            } else if (strcmp(oper, "remove-student") == 0) {
+                remove_std(buf, shenase);
+            } else if (strcmp(oper, "deactivate") == 0) {
+                deactivate(buf, shenase);
+            } else if (strcmp(oper, "define-self") == 0) {
+                define(buf, shenase);
+            } else if (strcmp(oper, "define-food") == 0) {
+                de_food(buf, shenase);
+            } else if (strcmp(oper, "define-meal-plan") == 0) {
+                plan_meal(buf, shenase);
+            } else if (strcmp(oper, "add-news") == 0) {
+                add_news(buf, shenase);
+            } else if (strcmp(oper, "change-datetime") == 0) {
+                change_datetime(buf, shenase);
+            } else if (strcmp(oper, "check-news") == 0) {
+                printf("111\n");
+                check_news(shenase);
+            } else if (strcmp(oper, "charge-account") == 0) {
+                charge(buf, shenase);
+            } else if (strcmp(oper, "reserve") == 0) {
+                reserve(buf, shenase);
+            } else if (strcmp(oper, "charge-student-account") == 0) {
+                charge_student_account(buf, shenase);
+            } else if (strcmp(oper, "take-food") == 0) {
+                take_food(buf, shenase);
+            } else if (strcmp(oper, "send-charge") == 0) {
+                send_charge(buf, shenase);
+            } else if (strcmp(oper, "cancel-reserve") == 0) {
+                cancel_reserve(buf, shenase);
+            } else if (strcmp(oper, "change-student-pass") == 0) {
+                change_student_pass(buf, shenase);
+            } else if (strcmp(oper, "see-reserve") == 0) {
+                see_reserve();
+            } else if (strcmp(oper, "financial-report") == 0) {
+                financial_report();
+            } else if (strcmp(oper, "take-food-report") == 0) {
+                take_food_report();
+            }
+              else if(strcmp(oper,"daily-reserve")==0){
+                  daily_reserve(buf,shenase);
+              }
+             else if(strcmp(oper,"change-self")==0){
+                 change_self(buf,shenase);
+             }
+            else if(strcmp(oper,"tahiye-gozaresh-amalkard")==0){
+                user_report_for_admin("140134003");
+            }
+            else if(strcmp(oper,"statistics-of-reserve")==0){
+                statics_of_reserve();
+            }
+            else{
+                printf("%s#invalid\n",shenase);
+                result=fopen("C:\\Users\\sepidpardaz\\Desktop\\result.txt","a");
+                fprintf(result,"%s#invalid\n",shenase);
+                fclose(result);
+
+            }
+        }
+    }
+  /*  for(int g=1;g<shomare;g++){
+        printf("%s\n",news[g].end);
+    }*/
+}
